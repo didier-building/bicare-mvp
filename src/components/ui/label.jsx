@@ -1,2 +1,4 @@
-import React from 'react'
-export const Label=({className='',...p})=><label className={`text-sm font-medium text-gray-700 ${className}`} {...p}/>
+import React from "react";
+export function Label({ className = "", ...props }) {
+  return <label className={`text-sm font-medium ${className}`} {...props} />;
+}

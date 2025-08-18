@@ -1,6 +1,6 @@
-import React from 'react'
-export const Card=({className='',...p})=><div className={`bg-white border rounded-xl ${className}`} {...p}/>
-export const CardHeader=({className='',...p})=><div className={`p-4 ${className}`} {...p}/>
-export const CardContent=({className='',...p})=><div className={`p-4 ${className}`} {...p}/>
-export const CardTitle=({className='',...p})=><h3 className={`text-lg font-semibold ${className}`} {...p}/>
-export const CardDescription=({className='',...p})=><p className={`text-sm text-gray-600 ${className}`} {...p}/>
+import React from "react";
+export function Card({ className = "", ...p }) { return <div className={`bg-white border rounded-2xl ${className}`} {...p} />; }
+export function CardHeader({ className = "", ...p }) { return <div className={`p-4 ${className}`} {...p} />; }
+export function CardContent({ className = "", ...p }) { return <div className={`p-4 ${className}`} {...p} />; }
+export function CardTitle({ className = "", ...p }) { return <h3 className={`font-semibold ${className}`} {...p} />; }
+export function CardDescription({ className = "", ...p }) { return <p className={`text-sm text-gray-600 ${className}`} {...p} />; }

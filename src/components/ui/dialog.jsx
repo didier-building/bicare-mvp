@@ -1,9 +1,39 @@
-import React from 'react'
-const C=React.createContext(null)
-export const Dialog=({children})=>{const [open,setOpen]=React.useState(false); return <C.Provider value={{open,setOpen}}>{children}</C.Provider>}
-export const DialogTrigger=({asChild,children})=>{const c=React.useContext(C);return React.cloneElement(children,{onClick:(e)=>{children.props.onClick&&children.props.onClick(e);c.setOpen(true)}})}
-export const DialogContent=({className='',children})=>{const c=React.useContext(C); if(!c.open) return null; return (<div className="fixed inset-0 z-50"><div className="absolute inset-0 bg-black/40" onClick={()=>c.setOpen(false)}></div><div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-[640px] rounded-xl bg-white border shadow ${className}`}>{children}</div></div>)}
-export const DialogHeader=({className='',...p})=><div className={`p-4 pb-0 ${className}`} {...p}/>
-export const DialogTitle=({className='',...p})=><h3 className={`text-lg font-semibold ${className}`} {...p}/>
-export const DialogDescription=({className='',...p})=><p className={`text-sm text-gray-600 ${className}`} {...p}/>
-export const DialogFooter=({className='',...p})=><div className={`p-4 flex gap-2 justify-end ${className}`} {...p}/>
+import React, { createContext, useContext, useState } from "react";
+const DialogCtx = createContext(null);
+
+export function Dialog({ open, onOpenChange, children }) {
+  const [internal, setInternal] = useState(false);
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internal;
+  const setOpen = (v) => { if (!isControlled) setInternal(v); onOpenChange && onOpenChange(v); };
+  return <DialogCtx.Provider value={{ open: isOpen, setOpen }}>{children}</DialogCtx.Provider>;
+}
+
+export function DialogTrigger({ asChild, children, ...props }) {
+  const ctx = useContext(DialogCtx);
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children, {
+      ...props,
+      onClick: (e) => { children.props.onClick && children.props.onClick(e); ctx?.setOpen(true); },
+    });
+  }
+  return <button {...props} onClick={() => ctx?.setOpen(true)}>{children}</button>;
+}
+
+export function DialogContent({ children, className = "", ...props }) {
+  const ctx = useContext(DialogCtx);
+  if (!ctx?.open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/40" onClick={() => ctx.setOpen(false)} />
+      <div className={`relative z-10 bg-white rounded-xl shadow-xl max-w-lg w-[90%] ${className}`} {...props}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export function DialogHeader({ className = "", ...p }) { return <div className={`p-4 border-b ${className}`} {...p} />; }
+export function DialogFooter({ className = "", ...p }) { return <div className={`p-4 border-t flex gap-2 justify-end ${className}`} {...p} />; }
+export function DialogTitle({ className = "", ...p }) { return <h3 className={`font-semibold text-lg ${className}`} {...p} />; }
+export function DialogDescription({ className = "", ...p }) { return <p className={`text-sm text-gray-600 ${className}`} {...p} />; }
