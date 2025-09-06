@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { motion } from "framer-motion";
 // shadcn/ui (real or stubbed)
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,8 @@ import {
   Wallet,
   FileText,
 } from "lucide-react";
+
+import { fetchTasks, fetchGuides, fetchNextAppointment } from "@/services";
 
 /* =========================
    Assets (logo + fallback)
@@ -102,22 +104,6 @@ function ProgressRing({ size = 68, stroke = 8, progress = 0 }) {
   );
 }
 
-/* =========================
-   Demo Data
-   ========================= */
-const demoTasks = [
-  { id: "med-am", label: "Take Amlodipine 5mg", channel: "app", due: "08:00" },
-  { id: "wound-photo", label: "Upload wound photo", channel: "wa", due: "09:00" },
-  { id: "exercise", label: "Do ankle pump exercise (10 reps)", channel: "app", due: "10:00" },
-  { id: "education", label: "Read: Signs of infection", channel: "app", due: "Anytime" },
-];
-
-const guides = [
-  { id: 1, name: "Aline U.", rating: 4.8, distance: 1.2, price: 2500, skills: ["Wound care", "Vitals"], region: "Kigali" },
-  { id: 2, name: "Eric M.", rating: 4.6, distance: 2.4, price: 2200, skills: ["Diabetes", "Counselling"], region: "Kigali" },
-  { id: 3, name: "Diane K.", rating: 4.9, distance: 0.9, price: 2800, skills: ["Post-surgery", "Mobility"], region: "Kigali" },
-];
-
 const redFlagSamples = [
   { id: "rf1", patient: "Solange N.", symptom: "Severe dizziness", sev: "high", mins: 2 },
   { id: "rf2", patient: "Jean P.", symptom: "Bleeding at wound site", sev: "critical", mins: 0 },
@@ -183,12 +169,22 @@ function OmniChannelPreview() {
    ========================= */
 function PatientHome() {
   const { lang } = useLang();
-  const [done, setDone] = useState(["education"]);
+  const [tasks, setTasks] = useState([]);
+  const [appointment, setAppointment] = useState(null);
+  const [guides, setGuides] = useState([]);
+  const [done, setDone] = useState([]);
   const [selectedGuide, setSelectedGuide] = useState(null);
   const [emrShared, setEmrShared] = useState(true);
-  const progress = Math.round((done.length / demoTasks.length) * 100);
+  const progress = tasks.length ? Math.round((done.length / tasks.length) * 100) : 0;
 
-  const toggleTask = (id) => setDone((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  useEffect(() => {
+    fetchTasks().then(setTasks).catch(console.error);
+    fetchNextAppointment().then(setAppointment).catch(console.error);
+    fetchGuides().then(setGuides).catch(console.error);
+  }, []);
+
+  const toggleTask = (id) =>
+    setDone((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   const dataChip = (fallback = "Local") => <Pill className={emrShared ? "text-teal-700 bg-teal-50" : "text-gray-700 bg-gray-100"}>{emrShared ? "EMR" : fallback}</Pill>;
 
   return (
@@ -202,7 +198,7 @@ function PatientHome() {
           </div>
         </div>
         <div className="flex-1 grid gap-2">
-          {demoTasks.map((t) => (
+          {tasks.map((t) => (
             <label key={t.id} className={`flex items-center gap-3 rounded-xl border p-3 ${done.includes(t.id) ? "bg-teal-50 border-teal-200" : "bg-white"}`}>
               <input type="checkbox" checked={done.includes(t.id)} onChange={() => toggleTask(t.id)} className="h-4 w-4" />
               <div className="flex-1">
@@ -232,12 +228,13 @@ function PatientHome() {
           </Badge>
         }
       >
-        <div className="grid gap-2 text-sm">
-          <div className="flex items-center gap-2"><Clock className="h-4 w-4" /> Thu, Aug 21 • 10:30 AM</div>
-          <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Kigali Teaching Hospital – Ward B</div>
-          <div className="flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> Bring meds list, avoid food 6h prior</div>
+        {appointment && (
+          <div className="grid gap-2 text-sm">
+            <div className="flex items-center gap-2"><Clock className="h-4 w-4" /> {appointment.time}</div>
+            <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {appointment.location}</div>
+            <div className="flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> {appointment.notes}</div>
 
-          <Dialog>
+            <Dialog>
             <DialogTrigger asChild>
               <Button className="mt-2 w-full"><T rw="Ukeneye ubufasha bwo gutwara?" en="Add transport help?" /></Button>
             </DialogTrigger>
@@ -255,7 +252,8 @@ function PatientHome() {
               <DialogFooter><Button>Notify Guides</Button></DialogFooter>
             </DialogContent>
           </Dialog>
-        </div>
+          </div>
+        )}
       </Section>
 
       {/* Vitals */}
