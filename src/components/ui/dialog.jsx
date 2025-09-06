@@ -14,7 +14,10 @@ export function DialogTrigger({ asChild, children, ...props }) {
   if (asChild && React.isValidElement(children)) {
     return React.cloneElement(children, {
       ...props,
-      onClick: (e) => { children.props.onClick && children.props.onClick(e); ctx?.setOpen(true); },
+      onClick: (e) => { 
+        children.props?.onClick?.(e); 
+        ctx?.setOpen(true); 
+      },
     });
   }
   return <button {...props} onClick={() => ctx?.setOpen(true)}>{children}</button>;
