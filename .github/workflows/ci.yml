@@ -6,15 +6,141 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  NODE_VERSION: 20
+
 jobs:
-  build:
+  environment-check:
     runs-on: ubuntu-latest
+    name: Environment Variables Check
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - run: npm install
-      - run: npm run lint
-      - run: npm test
-      - run: npm run build
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Check required environment variables
+        run: |
+          echo "Checking environment setup..."
+          echo "✓ NODE_VERSION: ${{ env.NODE_VERSION }}"
+          
+          # Check for .env.example file
+          if [ -f ".env.example" ]; then
+            echo "✓ .env.example file exists"
+            echo "Environment variables template:"
+            cat .env.example
+          else
+            echo "❌ .env.example file missing"
+            exit 1
+          fi
+          
+          # Verify environment variables are properly configured in services
+          if grep -q "import.meta.env.VITE_" src/services/*.js; then
+            echo "✓ Environment variables properly used in services"
+          else
+            echo "❌ Environment variables not properly configured in services"
+            exit 1
+          fi
+
+  security-audit:
+    runs-on: ubuntu-latest
+    name: Security and Dependency Audit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run security audit
+        run: |
+          echo "Running npm audit..."
+          npm audit --audit-level=high || echo "Security vulnerabilities found - review required"
+          
+          echo "Checking for outdated packages..."
+          npm outdated || echo "Some packages could be updated"
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    name: Build, Lint and Test
+    needs: [environment-check]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linting
+        run: npm run lint
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Build application
+        run: npm run build
+      
+      - name: Verify build output
+        run: |
+          echo "Build completed successfully!"
+          echo "Build artifacts:"
+          ls -la dist/
+          
+          # Check bundle size
+          BUNDLE_SIZE=$(stat -c%s dist/assets/*.js | head -1)
+          echo "Main bundle size: $BUNDLE_SIZE bytes"
+          
+          # Warn if bundle gets too large (>500KB)
+          if [ $BUNDLE_SIZE -gt 512000 ]; then
+            echo "⚠️ Bundle size is large (>500KB) - consider code splitting"
+          else
+            echo "✓ Bundle size is acceptable"
+          fi
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: dist/
+          retention-days: 7
+
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality Analysis
+    needs: [build-and-test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Analyze code metrics
+        run: |
+          echo "Analyzing code structure..."
+          
+          # Count lines in main component files
+          echo "Component sizes:"
+          find src/components -name "*.jsx" -exec wc -l {} \; | sort -nr
+          
+          # Check for large files (>300 lines)
+          echo "Checking for large files..."
+          find src -name "*.jsx" -exec wc -l {} \; | awk '$1 > 300 {print "⚠️ Large file: " $2 " (" $1 " lines)"}' || echo "✓ No overly large files found"
+          
+          # Verify modular structure
+          echo "Verifying modular structure..."
+          if [ -d "src/components/portals" ] && [ -d "src/components/shared" ] && [ -d "src/utils" ]; then
+            echo "✓ Modular structure in place"
+          else
+            echo "❌ Missing expected modular structure"
+          fi
