@@ -1,0 +1,16 @@
+{
+  "tasks": [
+    { "id": "med-am", "label": "Take Amlodipine 5mg", "channel": "app", "due": "08:00" },
+    { "id": "wound-photo", "label": "Upload wound photo", "channel": "wa", "due": "09:00" },
+    { "id": "exercise", "label": "Do ankle pump exercise (10 reps)", "channel": "app", "due": "10:00" },
+    { "id": "education", "label": "Read: Signs of infection", "channel": "app", "due": "Anytime" }
+  ],
+  "appointments": [
+    { "id": 1, "time": "Thu, Aug 21 • 10:30 AM", "location": "Kigali Teaching Hospital – Ward B", "notes": "Bring meds list, avoid food 6h prior" }
+  ],
+  "guides": [
+    { "id": 1, "name": "Aline U.", "rating": 4.8, "distance": 1.2, "price": 2500, "skills": ["Wound care", "Vitals"], "region": "Kigali" },
+    { "id": 2, "name": "Eric M.", "rating": 4.6, "distance": 2.4, "price": 2200, "skills": ["Diabetes", "Counselling"], "region": "Kigali" },
+    { "id": 3, "name": "Diane K.", "rating": 4.9, "distance": 0.9, "price": 2800, "skills": ["Post-surgery", "Mobility"], "region": "Kigali" }
+  ]
+}
