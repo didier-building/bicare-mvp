@@ -6,7 +6,7 @@ function collectItems(children, out) {
     if (!child) return;
     if (child.type && child.type.__isSelectItem) {
       out.push({ value: child.props.value, label: child.props.children });
-    } else if (child.props && child.props.children) {
+    } else if (child.props?.children) {
       collectItems(child.props.children, out);
     }
   });

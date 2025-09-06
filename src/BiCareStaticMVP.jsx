@@ -51,7 +51,7 @@ const LOGO_FALLBACK_SVG =
 /* =========================
    i18n (RW default)
    ========================= */
-const LangCtx = React.createContext({ lang: "rw", setLang: (_v) => {} });
+const LangCtx = React.createContext({ lang: "rw", setLang: () => {} });
 const useLang = () => useContext(LangCtx);
 const tr = (lang, rw, en) => (lang === "rw" ? rw : en);
 const T = ({ rw, en }) => {
