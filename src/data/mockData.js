@@ -35,7 +35,7 @@ export const redFlagSamples = [
     patient: "Claudine U.", 
     symptom: "Chest pain", 
     sev: "high", 
-    mins: 4,
+    mins: 7,  // Changed from 4 to 7 to show SLA progress bar
     condition: "Diabetes",
     facility: "Nyagatare HC",
     vitals: { bp: "145/90", hr: "88", temp: "36.9°C", o2: "97%" },
@@ -43,6 +43,21 @@ export const redFlagSamples = [
     allergies: ["Sulfa drugs"],
     aiSuggestion: "ECG recommended, cardiac assessment",
     aiConfidence: 78,
+    status: "pending"
+  },
+  { 
+    id: "rf4", 
+    patient: "Marie T.", 
+    symptom: "Difficulty breathing", 
+    sev: "high", 
+    mins: 9,  // Close to SLA breach
+    condition: "Asthma",
+    facility: "Muhanga HC",
+    vitals: { bp: "125/80", hr: "102", temp: "37.1°C", o2: "93%" },
+    medications: ["Salbutamol", "Prednisolone"],
+    allergies: ["Aspirin"],
+    aiSuggestion: "Oxygen therapy, nebulizer treatment",
+    aiConfidence: 92,
     status: "pending"
   },
 ];

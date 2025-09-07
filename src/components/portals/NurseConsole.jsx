@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   MessageCircle,
   Bell,
@@ -15,6 +14,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   Users,
+  Timer,
+  BarChart3,
 } from "lucide-react";
 
 import { Section, Pill } from "@/components/shared/Section";
@@ -96,6 +97,27 @@ export function NurseConsole() {
     return "text-red-600";
   };
 
+  const getSLAProgress = (mins) => {
+    const slaLimit = 10; // 10-minute SLA
+    const progress = Math.min((mins / slaLimit) * 100, 100);
+    return progress;
+  };
+
+  const getSLAColor = (mins) => {
+    if (mins >= 10) return "bg-red-500";
+    if (mins >= 8) return "bg-yellow-500";
+    return "bg-green-500";
+  };
+
+  const getTimelineData = (item) => {
+    const timeline = [
+      { time: "14:00", event: "Symptom onset reported", type: "patient" },
+      { time: "14:01", event: "Auto-detected red-flag", type: "system" },
+      ...(item.log || []).map(l => ({ time: l.t, event: l.msg, type: "nurse" }))
+    ];
+    return timeline;
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <Section title="Red-Flags" subtitle="Prioritized by severity/time">
@@ -144,7 +166,19 @@ export function NurseConsole() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge className={rf.sev === "critical" ? "bg-red-600" : "bg-orange-500"}>{rf.sev}</Badge>
-                  <Pill>{rf.mins}m</Pill>
+                  <div className="flex items-center gap-1">
+                    <Pill>{rf.mins}m</Pill>
+                    {/* SLA Progress Bar */}
+                    <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full transition-all duration-300 ${getSLAColor(rf.mins)}`}
+                        style={{ width: `${getSLAProgress(rf.mins)}%` }}
+                      />
+                    </div>
+                    {rf.mins >= 8 && (
+                      <Timer className="h-3 w-3 text-red-500 animate-pulse" />
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -208,9 +242,23 @@ export function NurseConsole() {
                     </div>
                   </div>
                   <div className="md:col-span-3 p-2 rounded-lg border">
-                    <div className="font-medium mb-1">Timeline & Audit</div>
-                    <div className="text-xs text-gray-600 space-y-1">
-                      {(rf.log || []).map((l, i) => <div key={i}>• {l.t} — {l.msg}</div>)}
+                    <div className="font-medium mb-2 flex items-center gap-1">
+                      <BarChart3 className="h-4 w-4" />
+                      Timeline & Audit
+                    </div>
+                    <div className="space-y-2">
+                      {getTimelineData(rf).map((event, i) => (
+                        <div key={i} className="flex items-start gap-2 text-xs">
+                          <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${
+                            event.type === 'patient' ? 'bg-blue-400' : 
+                            event.type === 'system' ? 'bg-purple-400' : 'bg-green-400'
+                          }`} />
+                          <div className="flex-1">
+                            <span className="text-gray-500">{event.time}</span>
+                            <span className="ml-2 text-gray-700">{event.event}</span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -238,7 +286,7 @@ export function NurseConsole() {
         </div>
 
         <div className="grid gap-2">
-          {chats.map((chat, i) => (
+          {chats.map((chat) => (
             <div key={chat.id} className={`flex items-center justify-between p-3 border rounded-xl bg-white ${chat.priority === 'urgent' ? 'ring-2 ring-orange-200' : ''}`}>
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -339,6 +387,19 @@ export function NurseConsole() {
             </div>
             <div className="text-yellow-700 mt-1">
               {atRisk} case(s) approaching 10-minute SLA — prioritize triage.
+            </div>
+          </div>
+        )}
+
+        {/* Predictive Alerts */}
+        {items.filter(i => !i.action && i.mins >= 6 && i.mins < 8).length > 0 && (
+          <div className="p-2 rounded-md bg-orange-100 border border-orange-300 text-xs">
+            <div className="flex items-center gap-1 text-orange-800">
+              <Timer className="h-3 w-3" />
+              <span className="font-medium">Predictive Alert:</span>
+            </div>
+            <div className="text-orange-700 mt-1">
+              {items.filter(i => !i.action && i.mins >= 6 && i.mins < 8).length} case(s) likely to breach SLA in next 2-4 minutes.
             </div>
           </div>
         )}
