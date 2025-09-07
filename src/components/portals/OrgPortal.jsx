@@ -91,6 +91,89 @@ export function OrgPortal() {
 
   return (
     <div className="grid grid-cols-1 gap-4">
+      {/* Corporate Dashboard Overview */}
+      <Section title="Corporate Dashboard" subtitle="Executive overview & ROI metrics" right={<Badge variant="default" className="bg-green-100 text-green-800">Live Data</Badge>}>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div className="p-4 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200">
+            <div className="text-sm text-blue-700 mb-1">Total Members</div>
+            <div className="text-2xl font-bold text-blue-800">438</div>
+            <div className="text-xs text-blue-600 flex items-center gap-1">
+              <TrendingUp className="h-3 w-3" />
+              +12% this month
+            </div>
+          </div>
+          <div className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-green-100 border border-green-200">
+            <div className="text-sm text-green-700 mb-1">Active Cohorts</div>
+            <div className="text-2xl font-bold text-green-800">3</div>
+            <div className="text-xs text-green-600">Post-op, HTN, DM</div>
+          </div>
+          <div className="p-4 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200">
+            <div className="text-sm text-purple-700 mb-1">SLA Compliance</div>
+            <div className="text-2xl font-bold text-purple-800">94%</div>
+            <div className="text-xs text-purple-600">Above 90% target</div>
+          </div>
+          <div className="p-4 rounded-xl bg-gradient-to-r from-orange-50 to-orange-100 border border-orange-200">
+            <div className="text-sm text-orange-700 mb-1">Cost Savings</div>
+            <div className="text-2xl font-bold text-orange-800">RWF 2.3M</div>
+            <div className="text-xs text-orange-600">YTD avoided costs</div>
+          </div>
+        </div>
+
+        {/* ROI Metrics */}
+        <div className="grid md:grid-cols-3 gap-4">
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3 text-green-600">Cost Reduction Impact</div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span>Reduced readmissions:</span>
+                <span className="font-medium text-green-600">-23%</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Avoided ER visits:</span>
+                <span className="font-medium text-green-600">47 cases</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Early interventions:</span>
+                <span className="font-medium text-green-600">156 cases</span>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3 text-blue-600">Care Quality Improvements</div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span>Medication adherence:</span>
+                <span className="font-medium text-blue-600">+18%</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Patient satisfaction:</span>
+                <span className="font-medium text-blue-600">92%</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Follow-up completion:</span>
+                <span className="font-medium text-blue-600">91%</span>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3 text-purple-600">Partnership Value</div>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span>Care coordination:</span>
+                <span className="font-medium text-purple-600">Seamless</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Data transparency:</span>
+                <span className="font-medium text-purple-600">Real-time</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Provider satisfaction:</span>
+                <span className="font-medium text-purple-600">4.8/5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
       <Section title="Enhanced Filters" subtitle="Multi-filter search with saved presets" right={<Badge variant="outline">Enhanced</Badge>}>
         {/* Basic Filters Row */}
         <div className="flex flex-col sm:flex-row gap-3 mb-4">
@@ -608,74 +691,838 @@ export function OrgPortal() {
         </div>
       </Section>
 
-      <Section title="Cohort Builder" subtitle="Define inclusion rules (UI only)">
-        <div className="grid gap-2 text-sm">
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary">Program: {program}</Badge>
-            <Badge variant="secondary">Region: Kigali</Badge>
-            <Badge variant="secondary">Age: 40–70</Badge>
-            <Badge variant="secondary">Consent: EMR shared</Badge>
+      <Section title="Enhanced Cohort Builder" subtitle="Drag-and-drop builder with predictive analytics">
+        {/* Rule Builder Interface */}
+        <div className="grid gap-4">
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="font-medium mb-3">Build Cohort Rules</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* Draggable Rule Components */}
+              <div className="p-3 bg-white border-2 border-dashed border-blue-300 rounded-lg cursor-move hover:border-blue-500 transition-colors">
+                <div className="text-sm font-medium text-blue-600">📋 Condition</div>
+                <div className="text-xs text-gray-600 mt-1">Drag to add condition filter</div>
+              </div>
+              <div className="p-3 bg-white border-2 border-dashed border-green-300 rounded-lg cursor-move hover:border-green-500 transition-colors">
+                <div className="text-sm font-medium text-green-600">👥 Age Range</div>
+                <div className="text-xs text-gray-600 mt-1">Drag to add age filter</div>
+              </div>
+              <div className="p-3 bg-white border-2 border-dashed border-purple-300 rounded-lg cursor-move hover:border-purple-500 transition-colors">
+                <div className="text-sm font-medium text-purple-600">📍 Region</div>
+                <div className="text-xs text-gray-600 mt-1">Drag to add location filter</div>
+              </div>
+              <div className="p-3 bg-white border-2 border-dashed border-orange-300 rounded-lg cursor-move hover:border-orange-500 transition-colors">
+                <div className="text-sm font-medium text-orange-600">✅ Consent</div>
+                <div className="text-xs text-gray-600 mt-1">Drag to add consent filter</div>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline">Add rule</Button>
-            <Button>Simulate count</Button>
+
+          {/* Active Rules */}
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3">Active Cohort Definition</div>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <Badge variant="default" className="bg-blue-100 text-blue-800">Program: {program}</Badge>
+              <Badge variant="default" className="bg-green-100 text-green-800">Age: 40–70</Badge>
+              <Badge variant="default" className="bg-purple-100 text-purple-800">Region: Kigali</Badge>
+              <Badge variant="default" className="bg-orange-100 text-orange-800">Consent: EMR shared</Badge>
+              <Button variant="ghost" size="sm" className="h-6 px-2">
+                <span className="text-red-500">×</span>
+              </Button>
+            </div>
+            
+            {/* Live Preview */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-3 bg-blue-50 rounded border">
+                <div className="text-lg font-semibold">347</div>
+                <div className="text-sm text-gray-600">Estimated patients</div>
+                <div className="text-xs text-green-600 mt-1">↑ 23% vs last month</div>
+              </div>
+              <div className="p-3 bg-green-50 rounded border">
+                <div className="text-lg font-semibold">RWF 2.1M</div>
+                <div className="text-sm text-gray-600">Est. monthly cost</div>
+                <div className="text-xs text-yellow-600 mt-1">Within budget range</div>
+              </div>
+              <div className="p-3 bg-purple-50 rounded border">
+                <div className="text-lg font-semibold">94%</div>
+                <div className="text-sm text-gray-600">Predicted adherence</div>
+                <div className="text-xs text-green-600 mt-1">Above target (90%)</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Predictive Analytics */}
+          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
+            <div className="font-medium mb-3">📊 Predictive Analytics</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div className="space-y-2">
+                <div className="font-medium text-blue-600">Future Burden Simulation</div>
+                <div>Q4 2025: Expected 20% increase in hypertension cases</div>
+                <div>Q1 2026: Diabetes cohort projected to grow by 15%</div>
+                <div>Peak season: December-February (flu season impact)</div>
+              </div>
+              <div className="space-y-2">
+                <div className="font-medium text-purple-600">Risk Stratification</div>
+                <div>High risk: 23% of cohort (need intensive follow-up)</div>
+                <div>Medium risk: 45% of cohort (standard protocol)</div>
+                <div>Low risk: 32% of cohort (minimal intervention)</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Saved Cohorts & Actions */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              <Label className="text-sm text-gray-600">Saved cohorts:</Label>
+              <Badge variant="outline" className="cursor-pointer hover:bg-gray-100">
+                Hypertension High-Risk
+              </Badge>
+              <Badge variant="outline" className="cursor-pointer hover:bg-gray-100">
+                Post-Op Rural
+              </Badge>
+              <Badge variant="outline" className="cursor-pointer hover:bg-gray-100">
+                Diabetes Urban 50+
+              </Badge>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline">Save Definition</Button>
+              <Button variant="outline">Generate Bundle</Button>
+              <Button>Simulate Count</Button>
+            </div>
           </div>
         </div>
       </Section>
 
-      <Section title="Billing" subtitle="PMPM & exports">
-        <div className="grid md:grid-cols-2 gap-3 text-sm">
-          <div className="p-3 rounded-xl bg-gray-50">
-            <div className="text-xs text-gray-600 mb-2">PMPM summary (static)</div>
-            <div className="text-lg font-semibold">RWF 1,920</div>
+      <Section title="Enhanced Billing" subtitle="Automated invoicing with detailed breakdowns">
+        <div className="grid gap-4">
+          {/* Invoice Summary */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="p-4 rounded-xl bg-green-50 border border-green-200">
+              <div className="text-sm text-green-700 mb-2">Current Month PMPM</div>
+              <div className="text-2xl font-semibold text-green-800">RWF 1,920</div>
+              <div className="text-xs text-green-600 mt-1">↓ 8% vs target (good)</div>
+            </div>
+            <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
+              <div className="text-sm text-blue-700 mb-2">Total Billed (July)</div>
+              <div className="text-2xl font-semibold text-blue-800">RWF 832K</div>
+              <div className="text-xs text-blue-600 mt-1">438 active patients</div>
+            </div>
+            <div className="p-4 rounded-xl bg-purple-50 border border-purple-200">
+              <div className="text-sm text-purple-700 mb-2">Outstanding</div>
+              <div className="text-2xl font-semibold text-purple-800">RWF 0</div>
+              <div className="text-xs text-green-600 mt-1">All invoices paid</div>
+            </div>
           </div>
-          <div className="p-3 rounded-xl bg-white border flex items-center justify-between">
-            <span>Export invoice CSV</span>
-            <Button variant="outline" size="sm"><FileText className="h-4 w-4 mr-1" /> Export</Button>
+
+          {/* Detailed Invoice View */}
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="flex justify-between items-center mb-4">
+              <div className="font-medium">Invoice Detail Breakdown</div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  View Full Invoice
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-1" />
+                  Download PDF
+                </Button>
+              </div>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-2">Service</th>
+                    <th className="text-left py-2">Patients</th>
+                    <th className="text-left py-2">Unit Cost</th>
+                    <th className="text-left py-2">SLA Compliance</th>
+                    <th className="text-left py-2">Total</th>
+                  </tr>
+                </thead>
+                <tbody className="text-xs">
+                  <tr className="border-b">
+                    <td className="py-2">Post-surgery follow-up</td>
+                    <td>128</td>
+                    <td>RWF 1,500</td>
+                    <td>
+                      <Badge variant="default" className="bg-green-100 text-green-800">98%</Badge>
+                    </td>
+                    <td>RWF 192,000</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2">Hypertension monitoring</td>
+                    <td>214</td>
+                    <td>RWF 1,200</td>
+                    <td>
+                      <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">89%</Badge>
+                    </td>
+                    <td>RWF 256,800</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2">Diabetes management</td>
+                    <td>96</td>
+                    <td>RWF 1,800</td>
+                    <td>
+                      <Badge variant="default" className="bg-green-100 text-green-800">96%</Badge>
+                    </td>
+                    <td>RWF 172,800</td>
+                  </tr>
+                  <tr className="border-b bg-gray-50">
+                    <td className="py-2 font-medium">SLA Adjustment</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td className="text-red-600">-RWF 15,600</td>
+                  </tr>
+                  <tr className="font-medium">
+                    <td className="py-2">Total</td>
+                    <td>438</td>
+                    <td>-</td>
+                    <td>94%</td>
+                    <td>RWF 606,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Automated Invoicing */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="font-medium mb-3">Automated Invoicing</div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between items-center">
+                  <span>Auto-generate monthly</span>
+                  <input type="checkbox" defaultChecked className="rounded" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Send to accounting</span>
+                  <input type="checkbox" defaultChecked className="rounded" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Payment reminders</span>
+                  <input type="checkbox" defaultChecked className="rounded" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Next invoice date:</span>
+                  <span className="font-medium">Aug 1, 2025</span>
+                </div>
+              </div>
+              <Button className="w-full mt-3" size="sm">
+                Configure Automation
+              </Button>
+            </div>
+
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="font-medium mb-3">Payment Integration</div>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center text-xs">QB</div>
+                    <span>QuickBooks</span>
+                  </div>
+                  <Badge variant="default" className="bg-green-100 text-green-800">Connected</Badge>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-orange-100 rounded flex items-center justify-center text-xs">SAP</div>
+                    <span>SAP ERP</span>
+                  </div>
+                  <Badge variant="outline">Setup</Badge>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-green-100 rounded flex items-center justify-center text-xs">💳</div>
+                    <span>Payment Gateway</span>
+                  </div>
+                  <Badge variant="secondary">Test Mode</Badge>
+                </div>
+              </div>
+              <Button variant="outline" className="w-full mt-3" size="sm">
+                Manage Integrations
+              </Button>
+            </div>
+          </div>
+
+          {/* Recent Invoices */}
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3">Recent Invoices</div>
+            <div className="space-y-2 text-sm">
+              {[
+                { month: "July 2025", amount: "RWF 832K", status: "Paid", date: "Aug 1" },
+                { month: "June 2025", amount: "RWF 798K", status: "Paid", date: "Jul 1" },
+                { month: "May 2025", amount: "RWF 845K", status: "Paid", date: "Jun 1" },
+              ].map((invoice, i) => (
+                <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                  <div className="flex items-center gap-3">
+                    <span className="font-medium">{invoice.month}</span>
+                    <span>{invoice.amount}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      {invoice.status}
+                    </Badge>
+                    <span className="text-xs text-gray-500">{invoice.date}</span>
+                    <Button variant="ghost" size="sm">
+                      <FileText className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </Section>
 
-      <Section title="Roles & API" subtitle="Access control (static)">
-        <div className="grid md:grid-cols-2 gap-3 text-sm">
-          <div className="p-3 rounded-xl bg-white border">
-            <div className="font-medium mb-2">Users</div>
-            <div className="flex items-center justify-between"><span>Alice</span><Badge>admin</Badge></div>
-            <div className="flex items-center justify-between"><span>Ben</span><Badge variant="secondary">analyst</Badge></div>
-            <div className="flex items-center justify-between"><span>Diana</span><Badge variant="outline">viewer</Badge></div>
-            <Button variant="outline" size="sm" className="mt-2">Invite user</Button>
+      <Section title="Enhanced Roles & API" subtitle="Custom roles, activity logs, and API monitoring">
+        <div className="grid gap-4">
+          {/* User Management with Custom Roles */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="p-4 bg-white border rounded-lg">
+              <div className="flex justify-between items-center mb-3">
+                <div className="font-medium">User Management</div>
+                <Button variant="outline" size="sm">
+                  <Users className="h-4 w-4 mr-1" />
+                  Invite User
+                </Button>
+              </div>
+              <div className="space-y-2 text-sm">
+                {[
+                  { name: "Alice Umutoni", role: "admin", status: "active", lastAccess: "5m ago" },
+                  { name: "Ben Kagame", role: "analyst", status: "active", lastAccess: "2h ago" },
+                  { name: "Diana Uwimana", role: "viewer", status: "active", lastAccess: "1d ago" },
+                  { name: "Eric Nkurunziza", role: "custom-finance", status: "pending", lastAccess: "never" },
+                ].map((user, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-xs font-medium">
+                        {user.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <div className="font-medium">{user.name}</div>
+                        <div className="text-xs text-gray-500">Last: {user.lastAccess}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={
+                        user.role === 'admin' ? 'default' :
+                        user.role.startsWith('custom') ? 'secondary' :
+                        'outline'
+                      }>
+                        {user.role}
+                      </Badge>
+                      <div className={`w-2 h-2 rounded-full ${
+                        user.status === 'active' ? 'bg-green-500' : 'bg-yellow-500'
+                      }`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Button variant="outline" className="w-full mt-3" size="sm">
+                Manage Custom Roles
+              </Button>
+            </div>
+
+            <div className="p-4 bg-white border rounded-lg">
+              <div className="font-medium mb-3">API Keys & Security</div>
+              <div className="space-y-3 text-sm">
+                <div>
+                  <Label className="text-xs text-gray-600">Production API Key</Label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Input value={apiKey} readOnly className="font-mono text-xs" />
+                    <Button size="sm" onClick={regen}>Regen</Button>
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-xs text-gray-600">Webhook URL</Label>
+                  <Input placeholder="https://example.org/webhooks/bicare" className="mt-1" />
+                </div>
+                <div className="p-2 bg-yellow-50 border border-yellow-200 rounded">
+                  <div className="font-medium text-yellow-800 text-xs">Security Notice</div>
+                  <div className="text-xs text-yellow-700 mt-1">
+                    Multi-factor authentication required for admin users
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full" size="sm">
+                  Configure MFA
+                </Button>
+              </div>
+            </div>
           </div>
-          <div className="p-3 rounded-xl bg-white border">
-            <div className="font-medium mb-2">API keys & webhooks</div>
-            <div className="flex items-center gap-2"><Input value={apiKey} readOnly className="font-mono" /><Button size="sm" onClick={regen}>Regenerate</Button></div>
-            <div className="mt-2"><Label>Webhook URL</Label><Input placeholder="https://example.org/webhooks/bicare" /></div>
+
+          {/* API Usage Dashboard */}
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3">API Usage Dashboard</div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+              <div className="p-3 bg-blue-50 rounded text-center">
+                <div className="text-lg font-semibold text-blue-800">15,847</div>
+                <div className="text-xs text-blue-600">Total Requests (24h)</div>
+              </div>
+              <div className="p-3 bg-green-50 rounded text-center">
+                <div className="text-lg font-semibold text-green-800">99.2%</div>
+                <div className="text-xs text-green-600">Success Rate</div>
+              </div>
+              <div className="p-3 bg-red-50 rounded text-center">
+                <div className="text-lg font-semibold text-red-800">23</div>
+                <div className="text-xs text-red-600">Failed Requests</div>
+              </div>
+              <div className="p-3 bg-purple-50 rounded text-center">
+                <div className="text-lg font-semibold text-purple-800">145ms</div>
+                <div className="text-xs text-purple-600">Avg Response Time</div>
+              </div>
+            </div>
+            
+            {/* API Endpoint Usage */}
+            <div className="text-sm">
+              <div className="font-medium mb-2">Top Endpoints (Last 24h)</div>
+              <div className="space-y-1">
+                {[
+                  { endpoint: "/api/patients", requests: 8234, status: "healthy" },
+                  { endpoint: "/api/cohorts", requests: 3421, status: "healthy" },
+                  { endpoint: "/api/alerts", requests: 2156, status: "degraded" },
+                  { endpoint: "/api/billing", requests: 1876, status: "healthy" },
+                ].map((api, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs bg-gray-200 px-1 rounded">{api.endpoint}</code>
+                      <div className={`w-2 h-2 rounded-full ${
+                        api.status === 'healthy' ? 'bg-green-500' : 'bg-yellow-500'
+                      }`} />
+                    </div>
+                    <div className="text-xs font-medium">{api.requests.toLocaleString()}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Activity Logs */}
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="flex justify-between items-center mb-3">
+              <div className="font-medium">Recent Activity Log</div>
+              <Button variant="outline" size="sm">
+                View Full Log
+              </Button>
+            </div>
+            <div className="space-y-2 text-sm">
+              {[
+                { user: "Alice", action: "Downloaded patient data export", time: "5 minutes ago", type: "export" },
+                { user: "Ben", action: "Modified cohort filter settings", time: "1 hour ago", type: "config" },
+                { user: "Diana", action: "Accessed KPI dashboard", time: "2 hours ago", type: "view" },
+                { user: "Alice", action: "Generated billing report", time: "3 hours ago", type: "export" },
+                { user: "System", action: "Automated invoice sent", time: "6 hours ago", type: "system" },
+              ].map((log, i) => (
+                <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2 h-2 rounded-full ${
+                      log.type === 'export' ? 'bg-red-500' :
+                      log.type === 'config' ? 'bg-yellow-500' :
+                      log.type === 'system' ? 'bg-blue-500' :
+                      'bg-green-500'
+                    }`} />
+                    <div>
+                      <span className="font-medium">{log.user}</span>
+                      <span className="ml-2">{log.action}</span>
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-500">{log.time}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Webhook Tester */}
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="font-medium mb-3">Webhook Tester</div>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <Label className="text-xs text-gray-600">Test Payload</Label>
+                <textarea 
+                  className="w-full mt-1 p-2 border rounded text-xs font-mono"
+                  rows="4"
+                  defaultValue={`{
+  "event": "patient_alert",
+  "patient_id": "12345",
+  "severity": "high",
+  "timestamp": "2025-07-20T10:30:00Z"
+}`}
+                />
+              </div>
+              <div>
+                <Label className="text-xs text-gray-600">Response</Label>
+                <div className="w-full mt-1 p-2 border rounded bg-white text-xs font-mono h-24 overflow-y-auto">
+                  <div className="text-green-600">Status: 200 OK</div>
+                  <div className="text-gray-600">Response time: 142ms</div>
+                  <div className="text-gray-600">Headers: application/json</div>
+                </div>
+              </div>
+            </div>
+            <Button className="mt-3" size="sm">
+              Send Test Webhook
+            </Button>
           </div>
         </div>
       </Section>
 
-      <Section title="Policies & Exports" subtitle="Retention, consent, schedules">
-        <div className="grid md:grid-cols-3 gap-3 text-sm">
-          <div className="p-3 rounded-xl bg-white border">
-            <div className="font-medium mb-1">Data retention</div>
-            <Select defaultValue="12m" onValueChange={() => {}}>
-              <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="6m">6 months</SelectItem>
-                <SelectItem value="12m">12 months</SelectItem>
-                <SelectItem value="24m">24 months</SelectItem>
-              </SelectContent>
-            </Select>
+      <Section title="Enhanced Policies & Compliance" subtitle="GDPR/HIPAA compliance with visual audit trails">
+        <div className="grid gap-4">
+          {/* Compliance Standards */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="p-4 bg-white border rounded-lg">
+              <div className="font-medium mb-2">Data Retention Policy</div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Patient vitals:</span>
+                  <Select defaultValue="12m" onValueChange={() => {}}>
+                    <SelectTrigger className="w-[100px]"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="6m">6 months</SelectItem>
+                      <SelectItem value="12m">12 months</SelectItem>
+                      <SelectItem value="24m">24 months</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex justify-between">
+                  <span>Claims data:</span>
+                  <Select defaultValue="24m" onValueChange={() => {}}>
+                    <SelectTrigger className="w-[100px]"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="12m">12 months</SelectItem>
+                      <SelectItem value="24m">24 months</SelectItem>
+                      <SelectItem value="60m">5 years</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex justify-between">
+                  <span>Audit logs:</span>
+                  <Select defaultValue="60m" onValueChange={() => {}}>
+                    <SelectTrigger className="w-[100px]"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="24m">24 months</SelectItem>
+                      <SelectItem value="60m">5 years</SelectItem>
+                      <SelectItem value="84m">7 years</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 bg-white border rounded-lg">
+              <div className="font-medium mb-2">Compliance Standards</div>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-blue-500 rounded flex items-center justify-center text-white text-xs">G</div>
+                    <span>GDPR Compliance</span>
+                  </div>
+                  <Badge variant="default" className="bg-green-100 text-green-800">Active</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-purple-500 rounded flex items-center justify-center text-white text-xs">H</div>
+                    <span>HIPAA Standards</span>
+                  </div>
+                  <Badge variant="default" className="bg-green-100 text-green-800">Active</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-orange-500 rounded flex items-center justify-center text-white text-xs">R</div>
+                    <span>Rwanda DPA</span>
+                  </div>
+                  <Badge variant="default" className="bg-green-100 text-green-800">Active</Badge>
+                </div>
+              </div>
+              <Button variant="outline" className="w-full mt-3" size="sm">
+                Configure Compliance
+              </Button>
+            </div>
+
+            <div className="p-4 bg-white border rounded-lg">
+              <div className="font-medium mb-2">Consent Management</div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between items-center">
+                  <span>Consent receipts required</span>
+                  <input type="checkbox" defaultChecked className="rounded" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Auto-expire consents</span>
+                  <input type="checkbox" defaultChecked className="rounded" />
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Patient data portability</span>
+                  <input type="checkbox" defaultChecked className="rounded" />
+                </div>
+                <div className="text-xs text-gray-600 mt-2">
+                  Consent valid for: 24 months
+                </div>
+              </div>
+              <Button variant="outline" className="w-full mt-3" size="sm">
+                Manage Consents
+              </Button>
+            </div>
           </div>
-          <div className="p-3 rounded-xl bg-white border">
-            <div className="font-medium mb-1">Consent policy</div>
-            <div className="text-xs text-gray-600">Consent receipts required for all access.</div>
+
+          {/* Export Scheduler */}
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3">Advanced Export Scheduler</div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <div className="font-medium text-sm mb-2">Scheduled Exports</div>
+                <div className="space-y-2 text-sm">
+                  {[
+                    { name: "KPI Dashboard", frequency: "Monthly", format: "CSV", lastRun: "Aug 1", nextRun: "Sep 1" },
+                    { name: "Patient Summary", frequency: "Weekly", format: "PDF", lastRun: "Aug 19", nextRun: "Aug 26" },
+                    { name: "Billing Report", frequency: "Monthly", format: "JSON", lastRun: "Aug 1", nextRun: "Sep 1" },
+                  ].map((export_, i) => (
+                    <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <div>
+                        <div className="font-medium">{export_.name}</div>
+                        <div className="text-xs text-gray-600">
+                          {export_.frequency} • {export_.format} • Next: {export_.nextRun}
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="sm">Edit</Button>
+                        <Button variant="ghost" size="sm">▶</Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Button variant="outline" className="w-full mt-3" size="sm">
+                  Add New Export
+                </Button>
+              </div>
+
+              <div>
+                <div className="font-medium text-sm mb-2">Export Formats & Destinations</div>
+                <div className="space-y-2 text-sm">
+                  <div className="p-2 bg-gray-50 rounded">
+                    <div className="flex justify-between items-center">
+                      <span>CSV Format</span>
+                      <Badge variant="outline">Available</Badge>
+                    </div>
+                    <div className="text-xs text-gray-600 mt-1">Standard comma-separated values</div>
+                  </div>
+                  <div className="p-2 bg-gray-50 rounded">
+                    <div className="flex justify-between items-center">
+                      <span>JSON API</span>
+                      <Badge variant="outline">Available</Badge>
+                    </div>
+                    <div className="text-xs text-gray-600 mt-1">RESTful API endpoints</div>
+                  </div>
+                  <div className="p-2 bg-gray-50 rounded">
+                    <div className="flex justify-between items-center">
+                      <span>PDF Reports</span>
+                      <Badge variant="outline">Available</Badge>
+                    </div>
+                    <div className="text-xs text-gray-600 mt-1">Formatted business reports</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="p-3 rounded-xl bg-white border">
-            <div className="font-medium mb-1">Scheduled exports</div>
-            <label className="flex items-center gap-2 text-sm"><input type="checkbox" defaultChecked /> Send KPI CSV monthly</label>
+
+          {/* Visual Audit Log */}
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3">Visual Audit Trail</div>
+            <div className="space-y-3">
+              {/* Timeline visualization */}
+              <div className="relative">
+                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+                {[
+                  { time: "10:30 AM", user: "Alice", action: "Exported patient cohort data (214 records)", type: "export", sensitive: true },
+                  { time: "09:15 AM", user: "Ben", action: "Modified alert thresholds", type: "config", sensitive: false },
+                  { time: "08:45 AM", user: "System", action: "Automated KPI report generated", type: "system", sensitive: false },
+                  { time: "08:00 AM", user: "Diana", action: "Accessed billing dashboard", type: "view", sensitive: false },
+                ].map((event, i) => (
+                  <div key={i} className="relative flex items-start gap-4 pb-4">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
+                      event.type === 'export' ? 'bg-red-100 text-red-800' :
+                      event.type === 'config' ? 'bg-yellow-100 text-yellow-800' :
+                      event.type === 'system' ? 'bg-blue-100 text-blue-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {event.type === 'export' ? '📤' :
+                       event.type === 'config' ? '⚙️' :
+                       event.type === 'system' ? '🤖' : '👁️'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-sm">{event.user}</span>
+                        <span className="text-xs text-gray-500">{event.time}</span>
+                        {event.sensitive && (
+                          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                            Sensitive
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-700 mt-1">{event.action}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-between items-center mt-4 pt-4 border-t">
+              <div className="text-sm text-gray-600">
+                Showing last 24 hours • {Math.floor(Math.random() * 50) + 150} total events
+              </div>
+              <Button variant="outline" size="sm">
+                View Full Audit Log
+              </Button>
+            </div>
           </div>
         </div>
       </Section>
+      {/* Claims Integration (For Insurers) */}
+      <Section title="Claims Integration" subtitle="Auto-matching with fraud detection" right={<Badge variant="secondary">Insurer Portal</Badge>}>
+        <div className="grid gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="p-4 bg-white border rounded-lg">
+              <div className="font-medium mb-3">Care Episode Matching</div>
+              <div className="space-y-2 text-sm">
+                {[
+                  { patient: "Solange N.", episode: "Post-surgery follow-up", claim: "CLM-2025-8901", status: "matched", amount: "RWF 15,000" },
+                  { patient: "Jean P.", episode: "Hypertension monitoring", claim: "CLM-2025-8902", status: "pending", amount: "RWF 12,000" },
+                  { patient: "Marie K.", episode: "Diabetes consultation", claim: "CLM-2025-8903", status: "matched", amount: "RWF 18,000" },
+                ].map((claim, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <div>
+                      <div className="font-medium">{claim.patient}</div>
+                      <div className="text-xs text-gray-600">{claim.episode}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs font-mono">{claim.claim}</div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={claim.status === 'matched' ? 'default' : 'secondary'}>
+                          {claim.status}
+                        </Badge>
+                        <span className="text-xs">{claim.amount}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Button variant="outline" className="w-full mt-3" size="sm">
+                View All Claims
+              </Button>
+            </div>
+
+            <div className="p-4 bg-white border rounded-lg">
+              <div className="font-medium mb-3">Fraud Detection</div>
+              <div className="space-y-3">
+                <div className="p-3 bg-red-50 border border-red-200 rounded">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-red-600" />
+                    <span className="font-medium text-red-800">Suspicious Pattern Detected</span>
+                  </div>
+                  <div className="text-sm text-red-700 mt-1">
+                    Duplicate claims for patient ID 12847 within 24 hours
+                  </div>
+                  <Button variant="outline" size="sm" className="mt-2 text-red-600 border-red-300">
+                    Investigate
+                  </Button>
+                </div>
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                    <span className="font-medium text-yellow-800">Unusual Pattern</span>
+                  </div>
+                  <div className="text-sm text-yellow-700 mt-1">
+                    Higher than average claim amounts for diabetes care
+                  </div>
+                  <Button variant="outline" size="sm" className="mt-2 text-yellow-600 border-yellow-300">
+                    Review
+                  </Button>
+                </div>
+                <div className="text-sm text-gray-600">
+                  <div className="flex justify-between">
+                    <span>Claims processed today:</span>
+                    <span className="font-medium">47</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Fraud alerts:</span>
+                    <span className="font-medium text-red-600">2</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Auto-approved:</span>
+                    <span className="font-medium text-green-600">43</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* Predictive Insights */}
+      <Section title="Predictive Insights" subtitle="AI-driven forecasts and risk stratification" right={<Badge variant="default" className="bg-blue-100 text-blue-800">AI Powered</Badge>}>
+        <div className="grid gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border rounded-lg">
+              <div className="font-medium mb-3">Cost & Demand Forecast</div>
+              <div className="space-y-3 text-sm">
+                <div className="p-3 bg-white rounded border">
+                  <div className="font-medium text-blue-600">Next 30 Days</div>
+                  <div>Expected cost increase: +15%</div>
+                  <div>Peak demand period: Aug 25-30</div>
+                  <div className="text-xs text-gray-600 mt-1">Based on historical patterns + seasonal trends</div>
+                </div>
+                <div className="p-3 bg-white rounded border">
+                  <div className="font-medium text-purple-600">Q4 2025 Projection</div>
+                  <div>Estimated patient load: 520 (+18%)</div>
+                  <div>Budget requirement: RWF 3.2M</div>
+                  <div className="text-xs text-gray-600 mt-1">Confidence level: 87%</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 bg-gradient-to-r from-orange-50 to-red-50 border rounded-lg">
+              <div className="font-medium mb-3">Risk Stratification</div>
+              <div className="space-y-2 text-sm">
+                <div className="p-2 bg-red-100 rounded">
+                  <div className="font-medium text-red-800">High Risk (20% of cohort)</div>
+                  <div className="text-red-700">87 patients need escalation in next 30 days</div>
+                </div>
+                <div className="p-2 bg-yellow-100 rounded">
+                  <div className="font-medium text-yellow-800">Medium Risk (45% of cohort)</div>
+                  <div className="text-yellow-700">197 patients require standard monitoring</div>
+                </div>
+                <div className="p-2 bg-green-100 rounded">
+                  <div className="font-medium text-green-800">Low Risk (35% of cohort)</div>
+                  <div className="text-green-700">154 patients on track, minimal intervention</div>
+                </div>
+              </div>
+              <Button className="w-full mt-3" size="sm">
+                Generate Risk Report
+              </Button>
+            </div>
+          </div>
+
+          {/* ML Model Performance */}
+          <div className="p-4 bg-white border rounded-lg">
+            <div className="font-medium mb-3">ML Model Performance</div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+              <div className="text-center p-3 bg-blue-50 rounded">
+                <div className="text-lg font-semibold text-blue-800">91.2%</div>
+                <div className="text-xs text-blue-600">Prediction Accuracy</div>
+              </div>
+              <div className="text-center p-3 bg-green-50 rounded">
+                <div className="text-lg font-semibold text-green-800">3.2 days</div>
+                <div className="text-xs text-green-600">Early Warning Lead Time</div>
+              </div>
+              <div className="text-center p-3 bg-purple-50 rounded">
+                <div className="text-lg font-semibold text-purple-800">847</div>
+                <div className="text-xs text-purple-600">Models Trained</div>
+              </div>
+              <div className="text-center p-3 bg-orange-50 rounded">
+                <div className="text-lg font-semibold text-orange-800">94.7%</div>
+                <div className="text-xs text-orange-600">Intervention Success Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
     </div>
   );
 }
