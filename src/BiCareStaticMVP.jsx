@@ -15,20 +15,72 @@ import {
 } from "lucide-react";
 
 import { PatientHome, CareGuide, NurseConsole, OrgPortal } from "@/components/portals";
+import { Homepage } from "@/components/Homepage";
 import { LangCtx, T } from "@/utils/i18n.jsx";
 import { LOGO_URL, LOGO_FALLBACK_SVG } from "@/utils/assets";
 
 export default function BiCareStaticMVP() {
-  const [role, setRole] = useState("patient"); // "patient" | "guide" | "nurse" | "org"
+  const [role, setRole] = useState(""); // "patient" | "guide" | "nurse" | "org" | ""
   const [lang, setLang] = useState("rw");
   const [logoSrc, setLogoSrc] = useState(LOGO_URL);
+  const [showHomepage, setShowHomepage] = useState(true);
+
+  const handleNavigateToPortal = (selectedRole) => {
+    setRole(selectedRole);
+    setShowHomepage(false);
+  };
+
+  const handleBackToHomepage = () => {
+    setShowHomepage(true);
+    setRole("");
+  };
+
+  // If we're showing the homepage, just show it without the header
+  if (showHomepage) {
+    return (
+      <LangCtx.Provider value={{ lang, setLang }}>
+        <div className="min-h-screen">
+          {/* Simple minimal header for homepage */}
+          <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/90 bg-white border-b">
+            <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-2xl overflow-hidden bg-white border shadow grid place-items-center">
+                  <img
+                    src={logoSrc}
+                    alt="BiCare 360"
+                    className="h-9 w-9 object-contain"
+                    onError={() => setLogoSrc(LOGO_FALLBACK_SVG)}
+                  />
+                </div>
+                <div>
+                  <div className="font-semibold text-lg">BiCare 360</div>
+                  <div className="text-xs text-gray-500"><T rw="Imbata y'ubuvuzi ihoraho — mu rugo" en="Continuity of care — at home" /></div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Select value={lang} onValueChange={setLang}>
+                  <SelectTrigger className="w-[120px]"><SelectValue placeholder="Language" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="rw">Kinyarwanda</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </header>
+          <Homepage onNavigateToPortal={handleNavigateToPortal} />
+        </div>
+      </LangCtx.Provider>
+    );
+  }
 
   return (
     <LangCtx.Provider value={{ lang, setLang }}>
       <div className="min-h-screen bg-gray-50 text-gray-900">
         <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white border-b">
           <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 cursor-pointer" onClick={handleBackToHomepage}>
               <div className="h-9 w-9 rounded-2xl overflow-hidden bg-white border shadow grid place-items-center">
                 <img
                   src={logoSrc}

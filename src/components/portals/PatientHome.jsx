@@ -152,60 +152,113 @@ export function PatientHome() {
       </Section>
 
       {/* Consent / Sharing */}
-      <Section title={<T rw="Kwemera gusangira amakuru" en="Data Sharing" />} subtitle={<T rw="Genzura ko usangira amakuru y'ubuzima" en="Control your health data sharing" />}>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
+      <Section title={<T rw="Kwemera gusangira amakuru" en="Data Sharing & Consent" />} subtitle={<T rw="Genzura ko usangira amakuru y'ubuzima" en="Control your health data sharing" />}>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-3 border rounded-lg">
             <div className="flex-1">
-              <div className="text-sm font-medium"><T rw="Sangira EMR n'abafasha" en="Share EMR with guides" /></div>
-              <div className="text-xs text-gray-500"><T rw="Aba abantu bazafasha babona amakuru yawe y'ubuvuzi" en="Care team can view your medical records" /></div>
+              <div className="text-sm font-medium flex items-center gap-2">
+                <T rw="Sangira EMR n'abafasha" en="Share EMR with care team" />
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">HIPAA Compliant</span>
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                <T rw="Aba abantu bazafasha bazabona amakuru yawe y'ubuvuzi" en="Care team can view your medical records and care plans" />
+              </div>
             </div>
             <Switch checked={emrShared} onCheckedChange={setEmrShared} />
           </div>
-          <div className="p-2 bg-gray-50 rounded text-xs text-gray-600">
-            <T rw="Data yose ikingwa mu buryo bwiza, kandi ikoresha encryption" en="All data encrypted and securely stored" /> {dataChip()}
+          
+          {emrShared && (
+            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div className="text-sm font-medium text-green-800 mb-1">
+                <T rw="Amakuru asangiwe" en="Shared Information" />
+              </div>
+              <div className="text-xs text-green-700 space-y-1">
+                <div>✓ <T rw="Amateka y'ubuvuzi" en="Medical history" /></div>
+                <div>✓ <T rw="Imiti ukoresha" en="Current medications" /></div>
+                <div>✓ <T rw="Ibisubizo by'ibizamini" en="Lab results" /></div>
+                <div>✓ <T rw="Gahunda z'ubuvuzi" en="Care plans" /></div>
+              </div>
+            </div>
+          )}
+          
+          <div className="p-2 bg-gray-50 rounded text-xs text-gray-600 flex items-center justify-between">
+            <span>
+              <T rw="Data yose ikingwa mu buryo bwiza, kandi ikoresha encryption" en="All data encrypted and securely stored" /> {dataChip()}
+            </span>
+            <Button variant="ghost" size="sm" className="text-xs">
+              <FileText className="h-3 w-3 mr-1" />
+              <T rw="Download ugaragaze" en="View Access Log" />
+            </Button>
           </div>
         </div>
       </Section>
 
       {/* Health monitoring */}
       <Section title={<T rw="Gukurikirana ubuzima" en="Health Monitoring" />} subtitle={<T rw="Ibipimo n'inyandiko" en="Vital signs and metrics" />}>
-        <div className="grid grid-cols-2 gap-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">Blood Pressure</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-xl font-bold">120/80</div>
-              <div className="text-xs text-green-600">Normal</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">Heart Rate</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-xl font-bold">72 bpm</div>
-              <div className="text-xs text-green-600">Good</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">Weight</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-xl font-bold">68 kg</div>
-              <div className="text-xs text-gray-500">-0.5 kg</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm">Sleep</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-xl font-bold">7.2h</div>
-              <div className="text-xs text-green-600">Good</div>
-            </CardContent>
-          </Card>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="border-l-4 border-l-green-500">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Blood Pressure</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="text-xl font-bold">120/80</div>
+                <div className="text-xs text-green-600 mb-2">Normal</div>
+                <div className="text-xs text-gray-500">
+                  <T rw="Iyi mibare irerekana imbaraga zawe z'amaraso" en="This shows the force of blood in your arteries" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-l-4 border-l-blue-500">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Heart Rate</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="text-xl font-bold">72 bpm</div>
+                <div className="text-xs text-green-600 mb-2">Good</div>
+                <div className="text-xs text-gray-500">
+                  <T rw="Umutima wawe ugunda imibare myiza" en="Your heart beats at a healthy rate" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-l-4 border-l-purple-500">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Weight</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="text-xl font-bold">68 kg</div>
+                <div className="text-xs text-green-600 mb-2">-0.5 kg</div>
+                <div className="text-xs text-gray-500">
+                  <T rw="Ugabanye ibiro neza" en="You're losing weight in a healthy way" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-l-4 border-l-indigo-500">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Sleep</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="text-xl font-bold">7.2h</div>
+                <div className="text-xs text-green-600 mb-2">Good</div>
+                <div className="text-xs text-gray-500">
+                  <T rw="Uraruhutse neza kuri uyu munsi" en="You're getting good rest each night" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {emrShared && (
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="text-sm font-medium text-blue-800 mb-2">
+                <T rw="Icyo ibi bivuze" en="What this means for you" />
+              </div>
+              <div className="text-xs text-blue-700 space-y-1">
+                <div>• <T rw="Ibipimo byawe byose biri mu buryo bwiza" en="All your vital signs are in healthy ranges" /></div>
+                <div>• <T rw="Komeza ukore siporo n'indyo myiza" en="Continue your exercise and healthy diet" /></div>
+                <div>• <T rw="Ruhuka neza kandi unywe amazi menshi" en="Keep getting good sleep and staying hydrated" /></div>
+              </div>
+            </div>
+          )}
         </div>
         <Button variant="outline" className="w-full mt-3"><Activity className="h-4 w-4 mr-2" />View trends</Button>
       </Section>
