@@ -48,7 +48,7 @@ The project has been modularized for better maintainability:
 src/
 ├── components/
 │   ├── portals/          # Main application portals
-│   │   ├── PatientHome.jsx      # Patient/Family portal
+│   │   ├── PatientHome.jsx      # Patient/User portal
 │   │   ├── CareGuide.jsx        # Care guide companion
 │   │   ├── NurseConsole.jsx     # Nurse triage console
 │   │   └── OrgPortal.jsx        # Hospital/Insurer portal

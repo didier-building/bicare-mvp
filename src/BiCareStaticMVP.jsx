@@ -107,10 +107,10 @@ export default function BiCareStaticMVP() {
               <Select value={role} onValueChange={setRole}>
                 <SelectTrigger className="w-[200px]"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="patient"><T rw="Umurwayi / Umuryango" en="Patient / Family" /></SelectItem>
+                  <SelectItem value="patient"><T rw="Umurwayi / Ukoresha" en="Patient / User" /></SelectItem>
                   <SelectItem value="guide"><T rw="Umufasha" en="Care Guide" /></SelectItem>
                   <SelectItem value="nurse"><T rw="Umuforomo" en="Nurse" /></SelectItem>
-                  <SelectItem value="org"><T rw="Ivuriro / Mutuelle" en="Hospital / Insurer" /></SelectItem>
+                  {/* <SelectItem value="org"><T rw="Ivuriro / Mutuelle" en="Hospital / Insurer" /></SelectItem> */}
                 </SelectContent>
               </Select>
             </div>

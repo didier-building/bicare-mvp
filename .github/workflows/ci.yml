@@ -78,9 +78,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+
+      - name: Start mock server
+        run: |
+          nohup npx json-server --watch mock/db.json --port 3001 &
+          sleep 3
+
       - name: Run linting
         run: npm run lint
-      
+
       - name: Run tests
         run: npm test
       

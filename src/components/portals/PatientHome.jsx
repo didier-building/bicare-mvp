@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+
+import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   CalendarDays,
   TriangleAlert,
@@ -13,11 +16,9 @@ import {
   MapPin,
   Clock,
   Activity,
-  Bell,
-  MessageCircle,
   FileText,
+  Bell
 } from "lucide-react";
-
 import { fetchTasks, fetchGuides, fetchNextAppointment } from "@/services";
 import { Section, Pill } from "@/components/shared/Section";
 import { ProgressRing } from "@/components/shared/ProgressRing";
@@ -25,45 +26,122 @@ import { OmniChannelPreview } from "@/components/shared/OmniChannelPreview";
 import { useLang, T } from "@/utils/i18n.jsx";
 
 export function PatientHome() {
+    // Helper for EMR/data chip
+    const dataChip = (fallback = "Local") => (
+      <Pill className={emrShared ? "text-teal-700 bg-teal-50" : "text-gray-700 bg-gray-100"}>
+        {emrShared ? "EMR" : fallback}
+      </Pill>
+    );
   const { lang } = useLang();
   const [tasks, setTasks] = useState([]);
+  // Goals state
+  const [goals, setGoals] = useState([
+    { id: 'goal1', label: lang === 'rw' ? "Kugabanya ibiro" : "Lose weight", done: false },
+    { id: 'goal2', label: lang === 'rw' ? "Kunywa amazi menshi" : "Drink more water", done: false },
+    { id: 'goal3', label: lang === 'rw' ? "Gukora siporo buri munsi" : "Exercise daily", done: false },
+  ]);
+  // Care guide booking and details state
+  const [bookedGuideId, setBookedGuideId] = useState(null);
+  const [viewGuide, setViewGuide] = useState(null);
+  // Booking form state
+  const [showBooking, setShowBooking] = useState(false);
+  const [bookingInfo, setBookingInfo] = useState({ name: "", hospital: "", date: "", time: "" });
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const handleBookingChange = (e) => {
+    const { name, value } = e.target;
+    setBookingInfo((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleBookingSubmit = (e) => {
+    e.preventDefault();
+    setBookingConfirmed(true);
+    setTimeout(() => {
+      setShowBooking(false);
+      setBookingConfirmed(false);
+      setBookingInfo({ name: "", hospital: "", date: "", time: "" });
+    }, 1800);
+  };
   const [appointment, setAppointment] = useState(null);
   const [guides, setGuides] = useState([]);
   const [done, setDone] = useState([]);
   const [emrShared, setEmrShared] = useState(true);
-  const progress = tasks.length ? Math.round((done.length / tasks.length) * 100) : 0;
+
+  // Progress calculation: combine tasks and goals
+  const totalItems = tasks.length + goals.length;
+  const completedGoals = goals.filter((g) => g.done).length;
+  const completedItems = done.length + completedGoals;
+  const progress = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
 
   useEffect(() => {
     fetchTasks().then(setTasks).catch(console.error);
     fetchNextAppointment().then(setAppointment).catch(console.error);
-    fetchGuides().then(setGuides).catch(console.error);
+    fetchGuides().then((data) => {
+      // Map backend guide fields to expected frontend fields
+      setGuides(
+        data.map((g) => ({
+          id: g.id,
+          name: g.name,
+          specialty: g.skills ? g.skills.join(', ') : '',
+          available: true, // Assume all are available for demo
+          onlineTime: 'Now', // Demo value
+          info: g.region ? `Region: ${g.region}, ${g.distance}km away` : '',
+          rating: g.rating,
+        }))
+      );
+    }).catch(console.error);
   }, []);
 
-  const toggleTask = (id) =>
-    setDone((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-  const dataChip = (fallback = "Local") => <Pill className={emrShared ? "text-teal-700 bg-teal-50" : "text-gray-700 bg-gray-100"}>{emrShared ? "EMR" : fallback}</Pill>;
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      {/* Tasks */}
-      <Section title={<T rw="Imirimo y'uyu munsi" en="Today's Tasks" />} subtitle={<T rw="Kanda urangize cyangwa ushireho kwibutsa" en="Tap to complete or snooze" />}>
-        <div className="flex items-center gap-4 mb-4">
-          <div className="text-center">
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Tasks & Goals */}
+        <Section title={<T rw="Imirimo n'intego by'uyu munsi" en="Today's Tasks & Goals" />} subtitle={<T rw="Shyiraho intego zawe, urangize imirimo, cyangwa ushireho kwibutsa" en="Set your goals, complete tasks, or snooze" />}>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="text-center">
             <ProgressRing progress={progress} />
             <div className="text-xs text-gray-500 mt-1">{progress}%</div>
+            <div className="text-xs text-gray-400 mt-1">
+              {completedItems} / {totalItems} <T rw="byuzuye" en="completed" />
+            </div>
           </div>
         </div>
+        {/* Goals Section */}
+        <div className="mb-4">
+          <div className="font-semibold text-sm mb-2">
+            <T rw="Intego zawe z'uyu munsi" en="Your Goals for Today" />
+          </div>
+          <div className="grid gap-2">
+            {goals.map((g) => (
+              <label key={g.id} className={`flex items-center gap-3 rounded-xl border p-3 ${g.done ? "bg-blue-50 border-blue-200" : "bg-white"}`}>
+                <input type="checkbox" checked={g.done} onChange={() => !g.done && toggleGoal(g.id)} className="h-4 w-4" disabled={g.done} />
+                <div className={`flex-1 font-medium text-sm ${g.done ? "line-through text-gray-400" : ""}`}>{g.label}</div>
+                {g.done && (
+                  <span className="flex items-center gap-1 text-blue-700 font-semibold">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
+                    <span>Done</span>
+                  </span>
+                )}
+              </label>
+            ))}
+          </div>
+        </div>
+        {/* Tasks Section */}
         <div className="flex-1 grid gap-2">
-          {tasks.map((t) => (
-            <label key={t.id} className={`flex items-center gap-3 rounded-xl border p-3 ${done.includes(t.id) ? "bg-teal-50 border-teal-200" : "bg-white"}`}>
-              <input type="checkbox" checked={done.includes(t.id)} onChange={() => toggleTask(t.id)} className="h-4 w-4" />
-              <div className="flex-1">
-                <div className="font-medium text-sm">{t.label}</div>
-                <div className="text-xs text-gray-500">Due {t.due} • via {t.channel.toUpperCase()}</div>
-              </div>
-              {done.includes(t.id) && <Badge className="bg-teal-600">Done</Badge>}
-            </label>
-          ))}
+          {tasks.length === 0 ? (
+            <div className="text-gray-500 text-sm text-center py-4">
+              <T rw="Nta mirimo yateguwe uyu munsi. Shyiraho intego zawe hejuru!" en="No tasks scheduled for today. Set your goals above!" />
+            </div>
+          ) : (
+            tasks.map((t) => (
+              <label key={t.id} className={`flex items-center gap-3 rounded-xl border p-3 ${done.includes(t.id) ? "bg-teal-50 border-teal-200" : "bg-white"}`}>
+                <input type="checkbox" checked={done.includes(t.id)} onChange={() => toggleTask(t.id)} className="h-4 w-4" />
+                <div className="flex-1">
+                  <div className="font-medium text-sm">{t.label}</div>
+                  <div className="text-xs text-gray-500">Due {t.due} • via {t.channel.toUpperCase()}</div>
+                </div>
+                {done.includes(t.id) && <Badge className="bg-teal-600">Done</Badge>}
+              </label>
+            ))
+          )}
         </div>
         <div className="text-xs text-gray-500 mt-2">
           {lang === "rw" ? (
@@ -102,12 +180,92 @@ export function PatientHome() {
             </div>
           </>
         ) : (
-          <div className="text-center text-gray-500 py-8">
-            <CalendarDays className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <div className="text-sm">No upcoming appointments</div>
-            <Button className="mt-2" size="sm">Book appointment</Button>
-          </div>
+          <>
+            <Card className="border-l-4 border-l-blue-500 text-center py-8">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">
+                  <T rw="Wabona ibitaro hafi yawe?" en="Book at a nearby hospital" />
+                </CardTitle>
+                <CardDescription>
+                  <T rw="Nta gahunda y'ubuvuzi iteganijwe. Ushobora kwiyandikisha kuri serivisi hafi yawe." en="No upcoming appointments. You can book at a nearby hospital or clinic." />
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center gap-2">
+                  <MapPin className="h-8 w-8 text-blue-400 mb-2" />
+                  <Dialog open={showBooking} onOpenChange={setShowBooking}>
+                    <DialogTrigger asChild>
+                      <Button className="mt-2" size="sm" onClick={() => setShowBooking(true)}>
+                        <T rw="Andikisha gahunda nshya" en="Book appointment" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-xs">
+                      {bookingConfirmed ? (
+                        <div className="text-center py-6">
+                          <div className="text-green-600 text-2xl mb-2">✓</div>
+                          <div className="font-semibold mb-1">
+                            <T rw="Gahunda yashyizweho!" en="Appointment booked!" />
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            <T rw="Uzahabwa ubutumwa bugufi bwo kwibutsa." en="You will receive a reminder message." />
+                          </div>
+                        </div>
+                      ) : (
+                        <form onSubmit={handleBookingSubmit} className="space-y-3">
+                          <DialogHeader>
+                            <DialogTitle>
+                              <T rw="Andikisha gahunda nshya" en="Book Appointment" />
+                            </DialogTitle>
+                          </DialogHeader>
+                          <Input name="name" required placeholder={lang === "rw" ? "Izina ryawe" : "Your name"} value={bookingInfo.name} onChange={handleBookingChange} />
+                          <Input name="hospital" required placeholder={lang === "rw" ? "Ibitaro/Serivisi hafi" : "Nearby hospital/clinic"} value={bookingInfo.hospital} onChange={handleBookingChange} />
+                          <Input name="date" required type="date" value={bookingInfo.date} onChange={handleBookingChange} />
+                          <Input name="time" required type="time" value={bookingInfo.time} onChange={handleBookingChange} />
+                          <DialogFooter>
+                            <Button type="submit" className="w-full">
+                              <T rw="Emeza" en="Confirm" />
+                            </Button>
+                          </DialogFooter>
+                        </form>
+                      )}
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardContent>
+            </Card>
+          </>
         )}
+      </Section>
+
+      {/* Personalized Health Tips */}
+      <Section title={<T rw="Inama z'ubuzima zikwiranye nawe" en="Personalized Health Tips" />} subtitle={<T rw="Zishingiye ku burwayi n'imiti ukoresha" en="Based on your medical condition and medication" />}> 
+        <div className="space-y-3">
+          {/* Example: Replace with dynamic logic as needed */}
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent>
+              <div className="font-semibold text-blue-800 mb-1">
+                <T rw="Diabetes" en="Diabetes" />
+              </div>
+              <ul className="list-disc pl-5 text-sm text-blue-900 space-y-1">
+                <li><T rw="Irinde ibiryo birimo isukari nyinshi." en="Avoid foods high in sugar." /></li>
+                <li><T rw="Fata imiti yawe uko muganga yabitegetse." en="Take your medication as prescribed." /></li>
+                <li><T rw="Genzura isukari mu maraso buri munsi." en="Monitor your blood sugar daily." /></li>
+              </ul>
+            </CardContent>
+          </Card>
+          <Card className="bg-green-50 border-green-200">
+            <CardContent>
+              <div className="font-semibold text-green-800 mb-1">
+                <T rw="Hypertension" en="Hypertension" />
+              </div>
+              <ul className="list-disc pl-5 text-sm text-green-900 space-y-1">
+                <li><T rw="Gabanya umunyu mu mafunguro." en="Reduce salt in your diet." /></li>
+                <li><T rw="Kora siporo buri munsi." en="Exercise regularly." /></li>
+                <li><T rw="Fata imiti yawe ukoresha neza." en="Take your blood pressure medication consistently." /></li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
       </Section>
 
       {/* Ask AI (Chat) */}
@@ -127,27 +285,67 @@ export function PatientHome() {
       </Section>
 
       {/* Care guides */}
-      <Section title={<T rw="Abafasha ku buzima" en="Care Guides" />} subtitle={<T rw="Bafasha ku nshingano z'ubuzima, ibikorwa n'amahugurwa" en="Health coaches for tasks, activities, and education" />}>
-        <div className="grid gap-2">
+      <Section title={<T rw="Abafasha ku buzima" en="Care Guides" />} subtitle={<T rw="Bafasha ku nshingano z'ubuzima, ibikorwa n'amahugurwa" en="Health coaches for tasks, activities, and education" />}> 
+        <div className="grid gap-3">
           {guides.map((g) => (
-            <div key={g.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50">
-              <Avatar className="h-8 w-8"><AvatarFallback>{g.name[0]}</AvatarFallback></Avatar>
-              <div className="flex-1">
-                <div className="text-sm font-medium">{g.name}</div>
-                <div className="text-xs text-gray-500">{g.specialty}</div>
+            <Card key={g.id} className="p-2 flex flex-col md:flex-row items-center gap-4 border-l-4 border-blue-200">
+              <div className="flex items-center gap-3 flex-1">
+                <Avatar className="h-12 w-12"><AvatarFallback>{g.name[0]}</AvatarFallback></Avatar>
+                <div>
+                  <div className="font-semibold text-base">{g.name}</div>
+                  <div className="text-xs text-gray-500 mb-1">{g.specialty}</div>
+                  <div className="flex items-center gap-1 text-yellow-500 text-xs mb-1">
+                    {Array.from({ length: g.rating || 4 }).map((_, i) => (
+                      <span key={i}>★</span>
+                    ))}
+                    <span className="text-gray-400 ml-1">({g.rating || 4}.0)</span>
+                  </div>
+                  <div className="text-xs text-gray-600 mb-1">{g.info || (g.available ? (lang === 'rw' ? 'Urahari ubu' : 'Available now') : (lang === 'rw' ? 'Ntiboneka' : 'Not available'))}</div>
+                </div>
               </div>
-              <div className="text-right">
-                <div className="text-xs text-gray-500">Online {g.onlineTime}</div>
-                <Badge variant={g.available ? "default" : "secondary"} className="text-xs">
-                  {g.available ? "Available" : "Busy"}
-                </Badge>
+              <div className="flex flex-col gap-2 min-w-[120px]">
+                <Dialog open={bookedGuideId === g.id} onOpenChange={(open) => !open && setBookedGuideId(null)}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline" onClick={() => setBookedGuideId(g.id)} disabled={!g.available}>
+                      <T rw="Andikisha" en="Book" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-xs">
+                    <div className="text-center py-6">
+                      <div className="text-green-600 text-2xl mb-2">✓</div>
+                      <div className="font-semibold mb-1">
+                        <T rw="Wanditse kuri uyu mufasha!" en="Care guide booked!" />
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        <T rw="Uzakirwa vuba." en="You will be contacted soon." />
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                <Dialog open={viewGuide === g.id} onOpenChange={(open) => !open && setViewGuide(null)}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline" onClick={() => setViewGuide(g.id)}>
+                      <T rw="Reba byinshi" en="View More" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-xs">
+                    <DialogHeader>
+                      <DialogTitle>{g.name}</DialogTitle>
+                    </DialogHeader>
+                    <div className="mb-2 text-xs text-gray-500">{g.specialty}</div>
+                    <div className="mb-2 text-sm">{g.info || (lang === 'rw' ? 'Urahari gufasha.' : 'Available to help.')}</div>
+                    <div className="flex items-center gap-1 text-yellow-500 text-xs mb-2">
+                      {Array.from({ length: g.rating || 4 }).map((_, i) => (
+                        <span key={i}>★</span>
+                      ))}
+                      <span className="text-gray-400 ml-1">({g.rating || 4}.0)</span>
+                    </div>
+                    <div className="text-xs text-gray-400">Online: {g.onlineTime}</div>
+                  </DialogContent>
+                </Dialog>
               </div>
-            </div>
+            </Card>
           ))}
-        </div>
-        <div className="mt-3 flex gap-2">
-          <Button variant="outline" size="sm" className="flex-1"><PhoneCall className="h-4 w-4 mr-1" />Call</Button>
-          <Button variant="outline" size="sm" className="flex-1"><MessageCircle className="h-4 w-4 mr-1" />Chat</Button>
         </div>
       </Section>
 
@@ -286,8 +484,8 @@ export function PatientHome() {
         <Button variant="outline" className="w-full mt-3">📞 Emergency Services</Button>
       </Section>
 
-      {/* Health education */}
-      <Section title={<T rw="Kwiga ku buzima" en="Health Education" />} subtitle={<T rw="Amakuru y'ubumenyi ku buzima" en="Educational health content" />}>
+      {/* Caregiving Courses */}
+      <Section title={<T rw="Amasomo yo kwita ku barwayi" en="Caregiving Courses" />} subtitle={<T rw="Amasomo y'ubufasha n'ubumenyi" en="Courses for caregiving and health knowledge" />}>
         <div className="space-y-2">
           <div className="p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
             <div className="text-sm font-medium">Managing Diabetes</div>
@@ -366,11 +564,8 @@ export function PatientHome() {
 
       {/* WhatsApp / USSD previews */}
       <div className="lg:col-span-3"><OmniChannelPreview /></div>
-
-      {/* Floating Red-Flag Button */}
-      <button title="Red-Flag" className="fixed bottom-6 right-6 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-white shadow-lg">
-        <TriangleAlert className="h-6 w-6" />
-      </button>
     </div>
+    {/* Floating Red-Flag Button & Modal Form removed */}
+    </>
   );
 }

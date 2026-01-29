@@ -23,6 +23,24 @@ import { Section } from "@/components/shared/Section";
 import { T } from "@/utils/i18n.jsx";
 
 export function CareGuide() {
+    // Live chat state
+    const [chatMessages, setChatMessages] = useState([
+      { sender: "nurse", text: "Hello, let me know if you need any help during your shift." }
+    ]);
+    const [chatInput, setChatInput] = useState("");
+    const nurseName = "Nurse Amina";
+
+    const sendMessage = (e) => {
+      e.preventDefault();
+      if (chatInput.trim()) {
+        setChatMessages([...chatMessages, { sender: "you", text: chatInput }]);
+        setChatInput("");
+        // Simulate nurse reply (demo)
+        setTimeout(() => {
+          setChatMessages((msgs) => [...msgs, { sender: "nurse", text: "Thanks for your update!" }]);
+        }, 1200);
+      }
+    };
   const [accepted, setAccepted] = useState(false);
   const [clocked, setClocked] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -48,7 +66,7 @@ export function CareGuide() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 relative">
       {/* Today's Shifts Overview */}
       <Section title={<T rw="Imishingire y'uyu munsi" en="Today's Shifts" />} subtitle={<T rw="Ugaragaza 3 imishingire usanzwe" en="You have 3 shifts scheduled" />}>
         <div className="space-y-3">
@@ -318,6 +336,31 @@ export function CareGuide() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* Live Chat with Nurse Card */}
+      <div className="col-span-1">
+        <Section title={<T rw="Chat na Muforomo" en="Chat with Nurse" />} subtitle={<T rw="Ushobora kuganira na {nurseName}" en={`You can chat live with ${nurseName}`} />}>
+          <div className="flex flex-col" style={{maxHeight: '60vh'}}>
+            <div className="font-semibold text-blue-700 mb-2">Chat with {nurseName}</div>
+            <div className="flex-1 overflow-y-auto mb-2" style={{maxHeight: '32vh'}}>
+              {chatMessages.map((msg, idx) => (
+                <div key={idx} className={`mb-2 flex ${msg.sender === 'you' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`px-3 py-2 rounded-lg text-sm ${msg.sender === 'you' ? 'bg-blue-100 text-blue-900' : 'bg-gray-100 text-gray-700'}`}>{msg.text}</div>
+                </div>
+              ))}
+            </div>
+            <form onSubmit={sendMessage} className="flex gap-2">
+              <Input
+                value={chatInput}
+                onChange={e => setChatInput(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1"
+                autoComplete="off"
+              />
+              <Button type="submit">Send</Button>
+            </form>
+          </div>
+        </Section>
+      </div>
     </div>
   );
 }
