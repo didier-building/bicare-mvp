@@ -412,6 +412,7 @@ export function Homepage({ onNavigateToPortal }) {
               </Card>
             </motion.div>
 
+            {/*
             <motion.div variants={itemVariants}>
               <Card 
                 className="h-full hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-orange-300"
@@ -431,6 +432,7 @@ export function Homepage({ onNavigateToPortal }) {
                 </CardContent>
               </Card>
             </motion.div>
+            */}
           </div>
         </div>
       </motion.section>

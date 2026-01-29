@@ -22,6 +22,13 @@ import { Section, Pill } from "@/components/shared/Section";
 import { redFlagSamples, chatSamples, commonTemplates } from "@/data/mockData";
 
 export function NurseConsole() {
+    // Demo caregivers data
+    const caregivers = [
+      { id: 1, name: "Alice Uwimana", specialty: "Wound Care", booked: true },
+      { id: 2, name: "Eric Mugisha", specialty: "Diabetes Care", booked: false },
+      { id: 3, name: "Marie Kamanzi", specialty: "Post-surgery", booked: true },
+      { id: 4, name: "Jean Bosco", specialty: "General Care", booked: false }
+    ];
   const initial = redFlagSamples.map((r) => ({ ...r, log: [{ t: "14:01", msg: "Auto-detected red-flag" }] }));
   const [items, setItems] = useState(initial);
   const [chats] = useState(chatSamples);
@@ -120,6 +127,34 @@ export function NurseConsole() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <Section title="Caregivers" subtitle="Booked and Available">
+        <div className="grid gap-2">
+          <div className="font-semibold text-green-700 mb-1">Booked Caregivers</div>
+          {caregivers.filter(c => c.booked).length === 0 && <div className="text-xs text-gray-500 mb-2">No caregivers booked.</div>}
+          {caregivers.filter(c => c.booked).map(c => (
+            <div key={c.id} className="p-3 border rounded-xl bg-green-50 flex items-center gap-3">
+              <Avatar className="h-8 w-8"><AvatarFallback>{c.name.split(" ")[0][0]}{c.name.split(" ")[1]?.[0] ?? ""}</AvatarFallback></Avatar>
+              <div className="flex-1">
+                <div className="font-medium text-sm">{c.name}</div>
+                <div className="text-xs text-gray-600">{c.specialty}</div>
+              </div>
+              <Badge className="bg-green-600">Booked</Badge>
+            </div>
+          ))}
+          <div className="font-semibold text-blue-700 mt-4 mb-1">Available Caregivers</div>
+          {caregivers.filter(c => !c.booked).length === 0 && <div className="text-xs text-gray-500 mb-2">No available caregivers.</div>}
+          {caregivers.filter(c => !c.booked).map(c => (
+            <div key={c.id} className="p-3 border rounded-xl bg-blue-50 flex items-center gap-3">
+              <Avatar className="h-8 w-8"><AvatarFallback>{c.name.split(" ")[0][0]}{c.name.split(" ")[1]?.[0] ?? ""}</AvatarFallback></Avatar>
+              <div className="flex-1">
+                <div className="font-medium text-sm">{c.name}</div>
+                <div className="text-xs text-gray-600">{c.specialty}</div>
+              </div>
+              <Badge className="bg-blue-600">Available</Badge>
+            </div>
+          ))}
+        </div>
+      </Section>
       <Section title="Red-Flags" subtitle="Prioritized by severity/time">
         {/* Filter and Sort Controls */}
         <div className="flex gap-2 mb-4 flex-wrap">
