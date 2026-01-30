@@ -26,6 +26,14 @@ import { OmniChannelPreview } from "@/components/shared/OmniChannelPreview";
 import { useLang, T } from "@/utils/i18n.jsx";
 
 export function PatientHome() {
+        // Toggle goal done
+        const toggleGoal = (id) => {
+          setGoals((prev) => prev.map((g) => g.id === id ? (g.done ? g : { ...g, done: true }) : g));
+        };
+      // Toggle task done
+      const toggleTask = (id) => {
+        setDone((prev) => prev.includes(id) ? prev : [...prev, id]);
+      };
     // Helper for EMR/data chip
     const dataChip = (fallback = "Local") => (
       <Pill className={emrShared ? "text-teal-700 bg-teal-50" : "text-gray-700 bg-gray-100"}>
